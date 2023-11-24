@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 async def get_secret():
-    secret_name = "app/mysql/credentials"
+    secret_name = "app/mysql/antonio/credentials"
     region_name = "us-east-1"
 
     # Create a Secrets Manager client
