@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 async def get_secret():
-    secret_name = "app/mysql/antonio/credentials"
+    secret_name = "cloud/antonio/credentials/rds"
     region_name = "us-east-1"
 
     # Create a Secrets Manager client
@@ -105,7 +105,7 @@ async def create_connection():
         host=os.getenv("DB_HOST"),
         user=secret["username"],
         password=secret["password"],
-        db=secret["name"]
+        db=secret["dbname"]
     )
     return conn
 
