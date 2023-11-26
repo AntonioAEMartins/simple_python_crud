@@ -8,32 +8,32 @@ from botocore.exceptions import ClientError, NoCredentialsError
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-async def get_secret():
-    secret_name = "cloud/antonio/credentials/rds"
-    region_name = "us-east-1"
+# async def get_secret():
+#     secret_name = "cloud/antonio/credentials/rds"
+#     region_name = "us-east-1"
 
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
+#     # Create a Secrets Manager client
+#     session = boto3.session.Session()
+#     client = session.client(
+#         service_name='secretsmanager',
+#         region_name=region_name
+#     )
 
-    loop = asyncio.get_running_loop()
+#     loop = asyncio.get_running_loop()
 
-    try:
-        # Unpack the dictionary into keyword arguments
-        get_secret_value_response = await loop.run_in_executor(
-            None,  # Uses the default executor
-            lambda: client.get_secret_value(SecretId=secret_name)
-        )
-    except ClientError as e:
-        raise e
+#     try:
+#         # Unpack the dictionary into keyword arguments
+#         get_secret_value_response = await loop.run_in_executor(
+#             None,  # Uses the default executor
+#             lambda: client.get_secret_value(SecretId=secret_name)
+#         )
+#     except ClientError as e:
+#         raise e
 
-    # Decrypts secret using the associated KMS key.
-    secret = get_secret_value_response['SecretString']
+#     # Decrypts secret using the associated KMS key.
+#     secret = get_secret_value_response['SecretString']
 
-    return eval(secret)
+#     return eval(secret)
 
 
 # Set up logging
@@ -103,9 +103,12 @@ async def create_connection():
     secret = await get_secret()
     conn = await aiomysql.connect(
         host=os.getenv("DB_HOST"),
-        user=secret["username"],
-        password=secret["password"],
-        db=secret["dbname"]
+        # user=secret["username"],
+        # password=secret["password"],
+        # db=secret["dbname"]
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        db=os.getenv("DB_NAME"),
     )
     return conn
 
